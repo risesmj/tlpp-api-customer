@@ -1,0 +1,40 @@
+#include "totvs.ch"
+
+Class CustomerService
+    private data repository as object
+
+    Method New() CONSTRUCTOR
+
+	public Method getCustomers() as json
+	public Method getCustomerById() as json
+	public Method create() as json
+	public Method update() as json
+	public Method delete() as json
+
+EndClass
+
+Method New() Class CustomerService
+    self:repository = CustomerRepository():New()
+Return
+
+Method getCustomers() as json Class CustomerService
+   return repository:getCustomers()
+Return
+
+Method getCustomerById() as json Class CustomerService
+   return repository:getCustomers()
+Return
+
+Method create() as json Class CustomerService
+   return repository:create()
+Return
+
+
+Method update() as json Class CustomerService
+   return repository:update()
+Return
+
+
+Method delete() as json Class CustomerService
+    return repository:delete()
+Return

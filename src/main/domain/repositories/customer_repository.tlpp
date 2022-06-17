@@ -1,0 +1,39 @@
+#include "totvs.ch"
+
+Class CustomerRepository
+
+	Method  New()   CONSTRUCTOR
+	public Method getCustomers() as array
+	public Method getCustomerById() as object
+	public Method create() as object
+	public Method update() as object
+	public Method delete() as logical
+
+EndClass
+
+Method New() Class CustomerRepository
+    
+Return
+
+Method getCustomers() as array Class CustomerRepository
+   
+Return
+
+Method getCustomerById(id as numeric) as object Class CustomerRepository
+  
+Return
+
+Method create(customer as object) as object Class CustomerRepository
+   
+Return
+
+
+Method update(id as numeric, customer as object) as object Class CustomerRepository
+   
+Return
+
+
+Method delete(id as numeric) as logical Class CustomerRepository
+    
+Return
+

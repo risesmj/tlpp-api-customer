@@ -1,0 +1,43 @@
+#include "totvs.ch"
+#include "tlpp-rest.th"
+
+Class CustomerController
+    private data service as object
+
+	Method  New()   CONSTRUCTOR
+	public Method getCustomers()
+	public Method getCustomerById()
+	public Method create()
+	public Method update()
+	public Method delete()
+
+EndClass
+
+Method New() Class CustomerController
+    self:service = CustomerService():New()
+Return
+
+@Get("/api/v1/customer")
+Method getCustomers() Class CustomerController
+    oRest:setResponse(service:getCustomers():toJson())
+Return
+
+@Get("/api/v1/customer/:id")
+Method getCustomerById() Class CustomerController
+    oRest:setResponse(service:getCustomerById(oRest:getPathParamsRequest()['id']):toJson())
+Return
+
+@Post("/api/v1/customer")
+Method create() Class CustomerController
+    oRest:setResponse(service:create():toJson())
+Return
+
+@Put("/api/v1/customer/:id")
+Method update() Class CustomerController
+    oRest:setResponse(service:update(oRest:getPathParamsRequest()['id']):toJson())
+Return
+
+@Delete("/api/v1/customer/:id")
+Method delete() Class CustomerController
+    oRest:setResponse(service:delete(oRest:getPathParamsRequest()['id']):toJson())
+Return

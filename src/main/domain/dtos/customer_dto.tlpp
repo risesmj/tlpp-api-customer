@@ -1,0 +1,18 @@
+#include "totvs.ch"
+
+Class CustomerDTO
+    private data id as numeric
+    private data name as character
+    private data type as character
+
+    public Method New() CONSTRUCTOR
+
+    public Method getId() as numeric
+    public Method setId() 
+
+    public Method getName() as character
+    public Method setName()
+
+    public Method getType() as character
+    public Method setType()
+EndClass

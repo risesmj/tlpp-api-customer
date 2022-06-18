@@ -9,16 +9,16 @@ Class CustomerController
 	@Get("/api/v1/customer")
 	public Method getCustomers()
 
-    @Get("/api/v1/customer/:id")
+	@Get("/api/v1/customer/:id")
 	public Method getCustomerById()
 
-    @Post("/api/v1/customer")
+	@Post("/api/v1/customer")
 	public Method create()
 
-    @Put("/api/v1/customer/:id")
+	@Put("/api/v1/customer/:id")
 	public Method update()
 
-    @Delete("/api/v1/customer/:id")
+	@Delete("/api/v1/customer/:id")
 	public Method delete()
 
 EndClass
@@ -35,30 +35,68 @@ Method getCustomers() Class CustomerController
 	oRest:setKeyHeaderResponse("Content-Type", "application/json")
 
 	aCustomerDTO := self:service:getCustomers()
-	aEval(aCustomerDTO,{|x | aAdd(aJson,x:toJson())})
-	jResponse := JsonObject():New()
-	jResponse:set(aJson)
 
-	oRest:setResponse(jResponse)
+	If ! Empty(aCustomerDTO)
+		aEval(aCustomerDTO,{|x | aAdd(aJson,x:toJson())})
+		jResponse := JsonObject():New()
+		jResponse:set(aJson)
+		oRest:setResponse(jResponse)
+	Else
+		oRest:setStatusCode(204)
+	Endif
 Return
 
 Method getCustomerById() Class CustomerController
-    Local   oCustomerDTO    as object
+	Local   oCustomerDTO    as object
 
-    oRest:setKeyHeaderResponse("Content-Type", "application/json")
-    
+	oRest:setKeyHeaderResponse("Content-Type", "application/json")
+
 	oCustomerDTO := self:service:getCustomerById(oRest:getPathParamsRequest()['id'])
-	oRest:setResponse(oCustomerDTO:toJson())
+
+	If oCustomerDTO <> nil
+		oRest:setStatusCode(200)
+		oRest:setResponse(oCustomerDTO:toJson())
+	Else
+		oRest:setStatusCode(204)
+	EndIf
 Return
 
 Method create() Class CustomerController
-	oRest:setResponse(self:service:create():toJson())
+	Local   oCustomerDTO   as object
+
+	oRest:setKeyHeaderResponse("Content-Type", "application/json")
+
+	oCustomerDTO := self:service:create(CustomerDTO():fromJson(oRest:getBodyRequest()))
+
+	If oCustomerDTO <> nil
+		oRest:setStatusCode(201)
+	Else
+		oRest:setStatusCode(400)
+	EndIf
+
 Return
 
 Method update() Class CustomerController
-	oRest:setResponse(self:service:update(oRest:getPathParamsRequest()['id']):toJson())
+	Local   oCustomerDTO   as object
+
+	oRest:setKeyHeaderResponse("Content-Type", "application/json")
+	oCustomerDTO := self:service:update(oRest:getPathParamsRequest()['id'],CustomerDTO():fromJson(oRest:getBodyRequest()))
+
+	If oCustomerDTO <> nil
+		oRest:setStatusCode(200)
+	Else
+		oRest:setStatusCode(400)
+	EndIf
 Return
 
 Method delete() Class CustomerController
-	oRest:setResponse(self:service:delete(oRest:getPathParamsRequest()['id']):toJson())
+	Local   lOk as logical
+
+	lOk := self:service:delete(oRest:getPathParamsRequest()['id'])
+
+	If lOk
+		oRest:setStatusCode(200)
+	Else
+		oRest:setStatusCode(400)
+	EndIf
 Return

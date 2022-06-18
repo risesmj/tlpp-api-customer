@@ -63,15 +63,15 @@ Method getCustomerById(id as character) as object Class CustomerRepository
 Return oCustomer
 
 Method create(oCustomer as object) as object Class CustomerRepository
-	oCustomer:id := GetSXENum("SA1","A1_COD")
+	oCustomer:setId(GetSXENum("SA1","A1_COD"))
 	ConfirmSX8()
 
 	dbSelectArea("SA1")
 
 	If RecLock("SA1",.T.)
-		Replace	SA1->A1_COD		With	oCustomer:id
-		Replace	SA1->A1_NOME	With	AllTrim(oCustomer:name)
-		Replace	SA1->A1_TIPO	With	oCustomer:type
+		Replace	SA1->A1_COD		With	oCustomer:getId()
+		Replace	SA1->A1_NOME	With	AllTrim(oCustomer:getName())
+		Replace	SA1->A1_TIPO	With	oCustomer:getType()
 		SA1->(msUnlock())
 		SA1->(dbCommit())
 		SA1->(dbCloseArea())
@@ -82,7 +82,7 @@ Method create(oCustomer as object) as object Class CustomerRepository
 Return oCustomer
 
 
-Method update(id as numeric, customer as object) as object Class CustomerRepository
+Method update(id as character, oCustomer as object) as object Class CustomerRepository
 
 	dbSelectArea("SA1")
 	SA1->(dbSetOrder(1))
@@ -90,8 +90,8 @@ Method update(id as numeric, customer as object) as object Class CustomerReposit
 	If SA1->(dbSeek(xFilial("SA1")+id))
 
 		If RecLock("SA1",.F.)
-			Replace	SA1->A1_NOME	With	AllTrim(oCustomer:name)
-			Replace	SA1->A1_TIPO	With	oCustomer:type
+			Replace	SA1->A1_NOME	With	AllTrim(oCustomer:getName())
+			Replace	SA1->A1_TIPO	With	oCustomer:getType()
 			SA1->(msUnlock())
 			SA1->(dbCommit())
 			SA1->(dbCloseArea())
@@ -104,7 +104,7 @@ Method update(id as numeric, customer as object) as object Class CustomerReposit
 Return oCustomer
 
 
-Method delete(id as numeric) as logical Class CustomerRepository
+Method delete(id as character) as logical Class CustomerRepository
 	Local	lRet	:= .F. as logical
 
 	dbSelectArea("SA1")

@@ -1,11 +1,11 @@
 #include "totvs.ch"
 
 Class CustomerDTO
-    private data id as character
-    private data name as character
-    private data type as character
+	private data id as character
+	private data name as character
+	private data type as character
 
-    public Method New() CONSTRUCTOR
+	public Method New() CONSTRUCTOR
 
 	public Method getId() as character
 	public Method setId()
@@ -13,9 +13,12 @@ Class CustomerDTO
 	public Method getName() as character
 	public Method setName()
 
-    static Method fromCustomer() as object
-    public Method toCustomer() as object
-    public Method toJson() as json
+	static Method fromCustomer() as object
+	static Method fromJson() as object
+
+	public Method toCustomer() as object
+	public Method toJson() as json
+
 EndClass
 
 Method New() Class CustomerDTO
@@ -25,39 +28,53 @@ Method getId() as character Class CustomerDTO
 Return self:id
 
 Method setId(id as character) Class CustomerDTO
-    self:id = id
+	self:id = id
 Return
 
 Method getName() as character Class CustomerDTO
 Return self:name
 
 Method setName(name as character) Class CustomerDTO
-    self:name = name
+	self:name = name
 Return
 
-Method fromCustomer(oCustomer as object) as object Class CustomerDTO
-    Local    oCustomerDTO := CustomerDTO():New()  as object
+Method fromJson(cJson as character) as object Class CustomerDTO
+	Local   oCustomerDTO    := CustomerDTO():New() as object
+	Local   jJson           as json
 
-    oCustomerDTO:setId(oCustomer:getId())
-    oCustomerDTO:setName(oCustomer:getName())
-    
+	jJson := JsonObject():New()
+	jJson:fromJson(cJson)
+
+	oCustomerDTO:setName(jJson['name'])
+
+Return oCustomerDTO
+
+Method fromCustomer(oCustomer as object) as object Class CustomerDTO
+	Local    oCustomerDTO := nil as object
+
+	If oCustomer <> nil
+		oCustomerDTO := CustomerDTO():New()
+		oCustomerDTO:setId(oCustomer:getId())
+		oCustomerDTO:setName(oCustomer:getName())
+	EndIf
+
 Return oCustomerDTO
 
 Method toCustomer() as object Class CustomerDTO
-    Local   oCustomer := Customer():New() as object
+	Local   oCustomer := Customer():New() as object
 
-    oCustomer:id    := self:id
-    oCustomer:name  := self:name
-    oCustomer:type  := self:type
+	oCustomer:setId(self:id)
+	oCustomer:setName(self:name)
+	oCustomer:setType(self:type)
 
 Return oCustomer
 
 Method toJson() as json Class CustomerDTO
-    Local   jCustomer := JsonObject():New() as json
+	Local   jCustomer := JsonObject():New() as json
 
-    jCustomer['id']     := self:id
-    jCustomer['name']   := self:name
-    jCustomer['type']   := self:type
+	jCustomer['id']     := self:id
+	jCustomer['name']   := self:name
+	jCustomer['type']   := self:type
 
 Return jCustomer
 

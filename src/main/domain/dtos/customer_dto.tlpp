@@ -1,18 +1,64 @@
 #include "totvs.ch"
 
 Class CustomerDTO
-    private data id as numeric
+    private data id as character
     private data name as character
     private data type as character
 
     public Method New() CONSTRUCTOR
 
-    public Method getId() as numeric
-    public Method setId() 
+	public Method getId() as character
+	public Method setId()
 
-    public Method getName() as character
-    public Method setName()
+	public Method getName() as character
+	public Method setName()
 
-    public Method getType() as character
-    public Method setType()
+    static Method fromCustomer() as object
+    public Method toCustomer() as object
+    public Method toJson() as json
 EndClass
+
+Method New() Class CustomerDTO
+Return
+
+Method getId() as character Class CustomerDTO
+Return self:id
+
+Method setId(id as character) Class CustomerDTO
+    self:id = id
+Return
+
+Method getName() as character Class CustomerDTO
+Return self:name
+
+Method setName(name as character) Class CustomerDTO
+    self:name = name
+Return
+
+Method fromCustomer(oCustomer as object) as object Class CustomerDTO
+    Local    oCustomerDTO := CustomerDTO():New()  as object
+
+    oCustomerDTO:setId(oCustomer:getId())
+    oCustomerDTO:setName(oCustomer:getName())
+    
+Return oCustomerDTO
+
+Method toCustomer() as object Class CustomerDTO
+    Local   oCustomer := Customer():New() as object
+
+    oCustomer:id    := self:id
+    oCustomer:name  := self:name
+    oCustomer:type  := self:type
+
+Return oCustomer
+
+Method toJson() as json Class CustomerDTO
+    Local   jCustomer := JsonObject():New() as json
+
+    jCustomer['id']     := self:id
+    jCustomer['name']   := self:name
+    jCustomer['type']   := self:type
+
+Return jCustomer
+
+

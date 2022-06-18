@@ -3,13 +3,13 @@
 Class CustomerService
     private data repository as object
 
-    Method New() CONSTRUCTOR
+   public Method New() CONSTRUCTOR
 
-	public Method getCustomers() as json
-	public Method getCustomerById() as json
-	public Method create() as json
-	public Method update() as json
-	public Method delete() as json
+	public Method getCustomers() as array
+	public Method getCustomerById() as object
+	public Method create() as object
+	public Method update() as object
+	public Method delete() as logical
 
 EndClass
 
@@ -17,24 +17,30 @@ Method New() Class CustomerService
     self:repository = CustomerRepository():New()
 Return
 
-Method getCustomers() as json Class CustomerService
-   return repository:getCustomers()
+Method getCustomers() as array Class CustomerService
+   Local aList          as array
+   Local aCustomerDTO   := {} as array
+
+   aList := self:repository:getCustomers()
+
+   aEval(aList,{ | x | aAdd(aCustomerDTO,CustomerDTO():fromCustomer(x)) })
+   
+Return aCustomerDTO
+
+Method getCustomerById() as object Class CustomerService
+   return self:repository:getCustomers()
 Return
 
-Method getCustomerById() as json Class CustomerService
-   return repository:getCustomers()
-Return
-
-Method create() as json Class CustomerService
-   return repository:create()
+Method create() as object Class CustomerService
+   return self:repository:create()
 Return
 
 
-Method update() as json Class CustomerService
-   return repository:update()
+Method update() as object Class CustomerService
+   return self:repository:update()
 Return
 
 
-Method delete() as json Class CustomerService
-    return repository:delete()
+Method delete() as logical Class CustomerService
+    return self:repository:delete()
 Return

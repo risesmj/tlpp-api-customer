@@ -2,7 +2,7 @@
 
 Class CustomerRepository
 
-	Method  New()   CONSTRUCTOR
+	public Method  New()   CONSTRUCTOR
 	public Method getCustomers() as array
 	public Method getCustomerById() as object
 	public Method create() as object
@@ -12,28 +12,119 @@ Class CustomerRepository
 EndClass
 
 Method New() Class CustomerRepository
-    
 Return
 
 Method getCustomers() as array Class CustomerRepository
-   
-Return
+	Local	aCustomers	:= {} as array
+	Local	cQuery		as character
+	Local	cAliasQry	:= getNextAlias() as character
+	Local	oCustomer	as object
 
-Method getCustomerById(id as numeric) as object Class CustomerRepository
-  
-Return
+	cQuery := " SELECT	TOP 10 A1_COD,"
+	cQuery += " 		A1_NOME,"
+	cQuery += " 		A1_TIPO"
+	cQuery += " FROM " + RetSqlTab("SA1") + " (NOLOCK)"
+	cQuery += " WHERE " + RetSqlCond("SA1")
+	MPSysOpenQuery(cQuery,cAliasQry)
+	(cAliasQry)->(dbGoTop())
 
-Method create(customer as object) as object Class CustomerRepository
-   
-Return
+	While (cAliasQry)->( ! EoF() )
+
+		oCustomer := Customer():New()
+		oCustomer:setId((cAliasQry)->A1_COD)
+		oCustomer:setName(AllTrim((cAliasQry)->A1_NOME))
+		oCustomer:setType((cAliasQry)->A1_TIPO)
+		aAdd(aCustomers,oCustomer)
+
+		(cAliasQry)->(dbSkip())
+	EndDo
+
+	(cAliasQry)->(dbCloseArea())
+
+Return aCustomers
+
+Method getCustomerById(id as character) as object Class CustomerRepository
+	Local	cAliasQry	:= getNextAlias() as character
+	Local	oCustomer	as object
+
+	dbSelectArea("SA1")
+	SA1->(dbSetOrder(1))
+
+	If SA1->(dbSeek(xFilial("SA1")+id))
+
+		oCustomer := Customer():New()
+		oCustomer:setId((cAliasQry)->A1_COD)
+		oCustomer:setName(AllTrim((cAliasQry)->A1_NOME))
+		oCustomer:setType((cAliasQry)->A1_TIPO)
+
+	EndIf
+
+	SA1->(dbCloseArea())
+
+Return oCustomer
+
+Method create(oCustomer as object) as object Class CustomerRepository
+	oCustomer:id := GetSXENum("SA1","A1_COD")
+	ConfirmSX8()
+
+	dbSelectArea("SA1")
+
+	If RecLock("SA1",.T.)
+		Replace	SA1->A1_COD		With	oCustomer:id
+		Replace	SA1->A1_NOME	With	AllTrim(oCustomer:name)
+		Replace	SA1->A1_TIPO	With	oCustomer:type
+		SA1->(msUnlock())
+		SA1->(dbCommit())
+		SA1->(dbCloseArea())
+	EndIf
+
+	SA1->(dbCloseArea())
+
+Return oCustomer
 
 
 Method update(id as numeric, customer as object) as object Class CustomerRepository
-   
-Return
+
+	dbSelectArea("SA1")
+	SA1->(dbSetOrder(1))
+
+	If SA1->(dbSeek(xFilial("SA1")+id))
+
+		If RecLock("SA1",.F.)
+			Replace	SA1->A1_NOME	With	AllTrim(oCustomer:name)
+			Replace	SA1->A1_TIPO	With	oCustomer:type
+			SA1->(msUnlock())
+			SA1->(dbCommit())
+			SA1->(dbCloseArea())
+		EndIf
+
+	EndIf
+
+	SA1->(dbCloseArea())
+
+Return oCustomer
 
 
 Method delete(id as numeric) as logical Class CustomerRepository
-    
-Return
+	Local	lRet	:= .F. as logical
+
+	dbSelectArea("SA1")
+	SA1->(dbSetOrder(1))
+
+	If SA1->(dbSeek(xFilial("SA1")+id))
+
+		If RecLock("SA1",.F.)
+			SA1->(dbDelete())
+			SA1->(msUnlock())
+			SA1->(dbCommit())
+			SA1->(dbCloseArea())
+
+			lRet := .T.
+		EndIf
+
+	EndIf
+
+	SA1->(dbCloseArea())
+
+Return lRet
 

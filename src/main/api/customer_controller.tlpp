@@ -4,7 +4,9 @@
 Class CustomerController
     private data service as object
 
-	Method  New()   CONSTRUCTOR
+	public Method  New()   CONSTRUCTOR
+
+    @Get("/api/v1/customer")
 	public Method getCustomers()
 	public Method getCustomerById()
 	public Method create()
@@ -19,25 +21,36 @@ Return
 
 @Get("/api/v1/customer")
 Method getCustomers() Class CustomerController
-    oRest:setResponse(service:getCustomers():toJson())
+    Local   aJson           := {} as array
+    Local   aCustomerDTO    as array
+    Local   jResponse       as json
+
+    oRest:setKeyHeaderResponse("Content-Type", "application/json")
+
+    aCustomerDTO := self:service:getCustomers()
+    aEval(aCustomerDTO,{|x | aAdd(aJson,x:toJson())})
+    jResponse := JsonObject():New()
+    jResponse:set(aJson)
+
+    oRest:setResponse(jResponse)
 Return
 
 @Get("/api/v1/customer/:id")
 Method getCustomerById() Class CustomerController
-    oRest:setResponse(service:getCustomerById(oRest:getPathParamsRequest()['id']):toJson())
+    oRest:setResponse(self:service:getCustomerById(oRest:getPathParamsRequest()['id']):toJson())
 Return
 
 @Post("/api/v1/customer")
 Method create() Class CustomerController
-    oRest:setResponse(service:create():toJson())
+    oRest:setResponse(self:service:create():toJson())
 Return
 
 @Put("/api/v1/customer/:id")
 Method update() Class CustomerController
-    oRest:setResponse(service:update(oRest:getPathParamsRequest()['id']):toJson())
+    oRest:setResponse(self:service:update(oRest:getPathParamsRequest()['id']):toJson())
 Return
 
 @Delete("/api/v1/customer/:id")
 Method delete() Class CustomerController
-    oRest:setResponse(service:delete(oRest:getPathParamsRequest()['id']):toJson())
+    oRest:setResponse(self:service:delete(oRest:getPathParamsRequest()['id']):toJson())
 Return

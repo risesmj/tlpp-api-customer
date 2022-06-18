@@ -1,18 +1,42 @@
 #include "totvs.ch"
 
 Class Customer
-    private data id as numeric
-    private data name as character
-    private data type as character
+	private data id as character
+	private data name as character
+	private data type as character
 
-    public Method New() CONSTRUCTOR
+	public Method New() CONSTRUCTOR
 
-    public Method getId() as numeric
-    public Method setId() 
+	public Method getId() as character
+	public Method setId()
 
-    public Method getName() as character
-    public Method setName()
+	public Method getName() as character
+	public Method setName()
 
-    public Method getType() as character
-    public Method setType()
+	public Method getType() as character
+	public Method setType()
 EndClass
+
+Method New() Class Customer
+Return
+
+Method getId() as character Class Customer
+Return self:id
+
+Method setId(id as character) Class Customer
+    self:id = id
+Return
+
+Method getName() as character Class Customer
+Return self:name
+
+Method setName(name as character) Class Customer
+    self:name = name
+Return
+
+Method getType() as character Class Customer
+Return self:type
+
+Method setType(type as character) Class Customer
+    self:type = type
+Return

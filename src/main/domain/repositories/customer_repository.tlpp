@@ -44,7 +44,6 @@ Method getCustomers() as array Class CustomerRepository
 Return aCustomers
 
 Method getCustomerById(id as character) as object Class CustomerRepository
-	Local	cAliasQry	:= getNextAlias() as character
 	Local	oCustomer	as object
 
 	dbSelectArea("SA1")
@@ -53,9 +52,9 @@ Method getCustomerById(id as character) as object Class CustomerRepository
 	If SA1->(dbSeek(xFilial("SA1")+id))
 
 		oCustomer := Customer():New()
-		oCustomer:setId((cAliasQry)->A1_COD)
-		oCustomer:setName(AllTrim((cAliasQry)->A1_NOME))
-		oCustomer:setType((cAliasQry)->A1_TIPO)
+		oCustomer:setId(SA1->A1_COD)
+		oCustomer:setName(AllTrim(SA1->A1_NOME))
+		oCustomer:setType(SA1->A1_TIPO)
 
 	EndIf
 

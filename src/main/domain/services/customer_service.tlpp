@@ -27,20 +27,20 @@ Method getCustomers() as array Class CustomerService
    
 Return aCustomerDTO
 
-Method getCustomerById() as object Class CustomerService
-   return self:repository:getCustomers()
+Method getCustomerById(id as character) as object Class CustomerService
+   return CustomerDTO():fromCustomer(self:repository:getCustomerById(id))
 Return
 
-Method create() as object Class CustomerService
-   return self:repository:create()
-Return
-
-
-Method update() as object Class CustomerService
-   return self:repository:update()
+Method create(customerDTO as object) as object Class CustomerService
+   return CustomerDTO():fromCustomer(self:repository:create(customerDTO:toCustomer()))
 Return
 
 
-Method delete() as logical Class CustomerService
-    return self:repository:delete()
+Method update(id as character, customerDTO as object) as object Class CustomerService
+   return CustomerDTO():fromCustomer(self:repository:update(id, customerDTO:toCustomer()))
+Return
+
+
+Method delete(id as character) as logical Class CustomerService
+    return self:repository:delete(id)
 Return

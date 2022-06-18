@@ -2,55 +2,63 @@
 #include "tlpp-rest.th"
 
 Class CustomerController
-    private data service as object
+	private data service as object
 
 	public Method  New()   CONSTRUCTOR
 
-    @Get("/api/v1/customer")
+	@Get("/api/v1/customer")
 	public Method getCustomers()
+
+    @Get("/api/v1/customer/:id")
 	public Method getCustomerById()
+
+    @Post("/api/v1/customer")
 	public Method create()
+
+    @Put("/api/v1/customer/:id")
 	public Method update()
+
+    @Delete("/api/v1/customer/:id")
 	public Method delete()
 
 EndClass
 
 Method New() Class CustomerController
-    self:service = CustomerService():New()
+	self:service = CustomerService():New()
 Return
 
-@Get("/api/v1/customer")
 Method getCustomers() Class CustomerController
-    Local   aJson           := {} as array
-    Local   aCustomerDTO    as array
-    Local   jResponse       as json
+	Local   aJson           := {} as array
+	Local   aCustomerDTO    as array
+	Local   jResponse       as json
+
+	oRest:setKeyHeaderResponse("Content-Type", "application/json")
+
+	aCustomerDTO := self:service:getCustomers()
+	aEval(aCustomerDTO,{|x | aAdd(aJson,x:toJson())})
+	jResponse := JsonObject():New()
+	jResponse:set(aJson)
+
+	oRest:setResponse(jResponse)
+Return
+
+Method getCustomerById() Class CustomerController
+    Local   oCustomerDTO    as object
 
     oRest:setKeyHeaderResponse("Content-Type", "application/json")
-
-    aCustomerDTO := self:service:getCustomers()
-    aEval(aCustomerDTO,{|x | aAdd(aJson,x:toJson())})
-    jResponse := JsonObject():New()
-    jResponse:set(aJson)
-
-    oRest:setResponse(jResponse)
+    
+	oCustomerDTO := self:service:getCustomerById(oRest:getPathParamsRequest()['id'])
+	oRest:setResponse(oCustomerDTO:toJson())
 Return
 
-@Get("/api/v1/customer/:id")
-Method getCustomerById() Class CustomerController
-    oRest:setResponse(self:service:getCustomerById(oRest:getPathParamsRequest()['id']):toJson())
-Return
-
-@Post("/api/v1/customer")
 Method create() Class CustomerController
-    oRest:setResponse(self:service:create():toJson())
+	oRest:setResponse(self:service:create():toJson())
 Return
 
-@Put("/api/v1/customer/:id")
 Method update() Class CustomerController
-    oRest:setResponse(self:service:update(oRest:getPathParamsRequest()['id']):toJson())
+	oRest:setResponse(self:service:update(oRest:getPathParamsRequest()['id']):toJson())
 Return
 
-@Delete("/api/v1/customer/:id")
 Method delete() Class CustomerController
-    oRest:setResponse(self:service:delete(oRest:getPathParamsRequest()['id']):toJson())
+	oRest:setResponse(self:service:delete(oRest:getPathParamsRequest()['id']):toJson())
 Return

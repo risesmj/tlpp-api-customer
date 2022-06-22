@@ -32,6 +32,8 @@ Method getCustomers() Class CustomerController
 	Local   aCustomerDTO    as array
 	Local   jResponse       as json
 
+
+	//teste branch feature
 	oRest:setKeyHeaderResponse("Content-Type", "application/json")
 
 	aCustomerDTO := self:service:getCustomers()

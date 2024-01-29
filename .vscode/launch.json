@@ -7,9 +7,21 @@
 			"name": "Depuração do idioma TOTVS",
 			"program": "${command:AskForProgramName}",
 			"cwb": "${workspaceFolder}",
-			"smartclientBin": "../totvs/bin/smartclient/smartclient.exe",
+			"smartclientBin": "C:\\smartclient_harpia\\smartclient.exe",
 			"isMultiSession": true,
 			"enableTableSync": true
 		}
-	]
+	],
+	"lastPrograms": [
+		{
+			"label": "u_PSCONTROLLER"
+		},
+		{
+			"label": "u_PSTEST"
+		},
+		{
+			"label": "u_PTEST"
+		}
+	],
+	"lastProgramExecuted": "u_PSCONTROLLER"
 }

@@ -1,0 +1,68 @@
+#include "totvs.ch"
+#include "tlpp-rest.th"
+#include "fw-tlpp-core.th"
+#include "msobject.ch"
+#include "tlpp-object.th"
+
+namespace controller
+
+@annotation PSGuard
+    name as char
+@end
+
+@annotation PSController
+	name as char
+	teste as char
+@end
+
+@PSController(name = 'Produtos')
+Class ProductController
+
+	public Method  New()   CONSTRUCTOR
+
+	@AllowCustomFields()
+	@PSGuard("Visualizar Produto")
+	@Get("/api/v1/product")
+	public Method getProducts()
+
+	@PSGuard("Visualizar Produto")
+	@Get("/api/v1/product/:id")
+	public Method getProductById()
+
+	@PSGuard("Visualizar Produto")
+	@Post("/api/v1/product")
+	public Method create()
+
+	@PSGuard("Atualizar Produto")
+	@Put("/api/v1/product/:id")
+	public Method update()
+
+	@PSGuard("Excluir Produto")
+	@Delete("/api/v1/product/:id")
+	public Method delete()
+
+EndClass
+
+Method New() Class ProductController
+Return
+
+Method getProducts() Class ProductController
+Return
+
+Method getProductById() Class ProductController
+
+Return
+
+Method create() Class ProductController
+
+Return
+
+Method update() Class ProductController
+
+Return
+
+Method delete() Class ProductController
+
+Return
+
+

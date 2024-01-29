@@ -1,0 +1,70 @@
+#include "totvs.ch"
+#include "fw-tlpp-core.th"
+#include "tlpp-object.th"
+
+User Function PSCONTROLLER()
+    Local aMethods      as array
+    Local aPermissions  := {} as array
+    Local jParams       as json
+    Local nX            as numeric
+    Local nY            as numeric
+    Local jRule         as Json
+
+    Local aControllers := Reflection.getClassesByAnnotation("PSController", "controller.*")
+
+    If ! Empty(aControllers)
+
+        For nX := 1 To Len(aControllers)
+
+            oObj :=  &(strtran(aControllers[nX]:CCLASSNAME,"controller.","") + "():New()")
+            
+            jRule := JsonObject():New()
+
+            jRule['rule'] := Reflection.getObjectAnnotation(oObj,"PSController")['name']
+            jRule['rules'] := {}
+
+            aMethods := Reflection.getMethodsByAnnotation(oObj, "PSGuard")
+
+            For nY := 1 To Len(aMethods)
+
+                jParams := Reflection.getMethodAnnotation( oObj, aMethods[nY],  "PSGuard" ) 
+
+                aAdd(jRule['rules'],jParams)   
+
+            Next nY
+
+            aAdd(aPermissions,jRule)
+
+        Next nX
+
+    EndIf
+
+Return aControllers
+
+User Function psCheck(oController,cCurrentHandle)
+    Local oRet := PSRouteConfig():New() as object
+
+    If ! checkPermission(oController,cCurrentHandle)
+        oRest:setStatusCode(403)
+        Break
+    EndIf
+
+    oRouteConfig:customFields := checkCustomFields(oController,cCurrentHandle)
+
+Return oRet
+
+Static Function checkPermission(oController,cCurrentHandle)
+    Local cQuery as character
+
+    cQuery += " SELECT COUNT(*) FIND"
+    cQuery += " FROM PS_ProfileEndpoints"
+    cQuery += " WHERE endpoint_id = " + ValToSql(cEndpoint)
+    cQuery += " AND profile_id = " + ValToSql(cProfileId)
+    cQuery += " AND enabled = 1"
+
+Return MPSysExecScalar(cQuery,"FIND") > 0
+
+Static Function checkCustomFields(oController,cCurrentHandle)
+Return aRet
+
+
